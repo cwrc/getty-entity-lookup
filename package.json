@@ -25,7 +25,6 @@
     "browserify": "mkdirp build && browserify test/development.js -o build/development.js --debug -t [ babelify --presets [ es2015 ] ]",
     "watch": "mkdirp build && watchify test/development.js -o build/development.js --debug --verbose -t [ babelify --presets [ es2015 ] ]",
     "test": "mkdirp coverage && npm run test:electron && npm run generate-coverage",
-    "test:browserify": "cross-env NODE_ENV=test browserify test/browser.js -o build/browser.js --debug",
     "test:browser": "cross-env NODE_ENV=test browserify test/browser.js | browser-run  -p 2222 --static .  | node test/extract-coverage.js | faucet",
     "test:electron": "cross-env NODE_ENV=test browserify test/browser.js | browser-run --static . | node test/extract-coverage.js | faucet ",
     "test:chrome": "cross-env NODE_ENV=test browserify test/browser.js | browser-run --static . -b chrome | node test/extract-coverage.js | faucet ",
