@@ -75,9 +75,6 @@ const gettyLookup = require('getty-entity-lookup');
 
 ###### findPlace(query)
 
-###### findOrganization(query)  
-  
-###### findTitle(query)  
 
 <br><br>
 where the 'query' argument is an object:  
@@ -117,9 +114,6 @@ There are a further four methods that are mainly made available to facilitate te
 
 ###### getPlaceLookupURI(query)
 
-###### getOrganizationLookupURI(query)  
-  
-###### getTitleLookupURI(query) 
 
 <br><br>
 where the 'query' argument is the entity name to find and the methods return the getty URL that in turn returns results for the query.
