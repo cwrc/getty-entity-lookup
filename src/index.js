@@ -65,7 +65,6 @@ function getPlaceLookupURI(queryString) {
 async function callGetty(url, queryString, gettyVocab) {
 
         let parsedJSON = await fetchWithTimeout(url);
-        console.log(parsedJSON)
         return parsedJSON.results.bindings.map(
             ({
                  Subject: {value: uri},
@@ -76,15 +75,6 @@ async function callGetty(url, queryString, gettyVocab) {
             })
 }
 
-/*return parsedJSON.results.bindings.map(
-    (result) => {
-        let uri = result.Subject.value;
-        let name = result.Term.value;
-        let description = result.Descr?
-            result.Descr.value:
-            "No description available"
-        return {nameType: gettyVocab, id: uri, uri, name, repository: 'getty', originalQueryString: queryString, description}
-    })*/
 async function findPerson(queryString) {
     return callGetty(getPersonLookupURI(queryString), queryString, gettyULAN)
 }
@@ -97,7 +87,5 @@ module.exports = {
     findPerson: findPerson,
     findPlace: findPlace,
     getPersonLookupURI: getPersonLookupURI,
-    getPlaceLookupURI: getPlaceLookupURI,
-
-    fetchWithTimeout: fetchWithTimeout
+    getPlaceLookupURI: getPlaceLookupURI
 }

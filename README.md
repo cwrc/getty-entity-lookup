@@ -51,15 +51,15 @@ but again, CONTAINS only matches substrings.
 There is at least one alternative to CONTAINS - REGEX - but as described 
 here: https://www.cray.com/blog/dont-use-hammer-screw-nail-alternatives-regex-sparql/ REGEX has even worse performance than CONTAINS.  
 
-A further alternative is to use some of the 
-custom full text SPARQL search functions that specific triplestores sometimes offer, and since we are controlling the queries that might be reasonable.  
-And Getty does provide full text search by exposing it's underlying lucene index, as described here:
+A further alternative, which we've adopted, is the 
+custom full text SPARQL search function through which Getty exposes it's underlying lucene index, as described here:
 
 http://vocab.getty.edu/doc/queries/#Full_Text_Search_Query
 
 and here:
 
 http://serials.infomotions.com/code4lib/archive/2014/201402/0596.html
+
 
 ### Installation
 
