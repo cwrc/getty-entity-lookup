@@ -62,24 +62,33 @@ function getPlaceLookupURI(queryString) {
     return getEntitySourceURI(queryString, gettyTGN)
 }
 
-async function callGetty(url, queryString, gettyVocab) {
+function callGetty(url, queryString, gettyVocab) {
 
-        let parsedJSON = await fetchWithTimeout(url);
+    return fetchWithTimeout(url).then((parsedJSON) => {
         return parsedJSON.results.bindings.map(
             ({
                  Subject: {value: uri},
                  Term: {value: name},
                  Descr: {value: description = 'No description available'} = "No description available"
              }) => {
-                return {nameType: gettyVocab, id: uri, uri, name, repository: 'getty', originalQueryString: queryString, description}
+                return {
+                    nameType: gettyVocab,
+                    id: uri,
+                    uri,
+                    name,
+                    repository: 'getty',
+                    originalQueryString: queryString,
+                    description
+                }
             })
+    })
 }
 
-async function findPerson(queryString) {
+function findPerson(queryString) {
     return callGetty(getPersonLookupURI(queryString), queryString, gettyULAN)
 }
 
-async function findPlace(queryString) {
+function findPlace(queryString) {
     return callGetty(getPlaceLookupURI(queryString), queryString, gettyTGN)
 }
 
