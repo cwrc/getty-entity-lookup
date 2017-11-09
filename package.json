@@ -1,6 +1,6 @@
 {
   "name": "getty-entity-lookup",
-  "version": "0.0.1-development",
+  "version": "0.0.0-development",
   "description": "Find entities (people, places) in getty.",
   "main": "src/index.js",
   "repository": {
