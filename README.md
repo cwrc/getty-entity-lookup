@@ -60,6 +60,14 @@ and here:
 
 http://serials.infomotions.com/code4lib/archive/2014/201402/0596.html
 
+The endpoint does not, however, support HTTPS.  And so, we proxy our calls to the lookup through own server: 
+ 
+```https://lookup.services.cwrc.ca/getty```
+ 
+to thereby allow the CWRC-Writer to make HTTPS calls to the lookup.  
+We can’t make plain HTTP calls from the CWRC-Writer because the CWRC-Writer may only be 
+loaded over HTTPS, and any page loaded with HTTPS is not allowed (by many browsers) to make HTTP AJAX calls.
+
 
 ### Installation
 

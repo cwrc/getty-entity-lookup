@@ -41,7 +41,10 @@ function fetchWithTimeout(url, config = {}, timeout = 8000) {
 // i.e., to allow intercepting the HTTP call during testing, using sinon or similar.
 function getEntitySourceURI(queryString, gettyVocab) {
 
-        return `http://vocab.getty.edu/sparql.json?query=` + encodeURIComponent(`select ?Subject ?Term ?Parents ?Descr ?ScopeNote ?Type (coalesce(?Type1,?Type2) as ?ExtraType) {
+    // Calls a cwrc proxy (https://lookup.services.cwrc.ca/getty), so that we can make https calls from the browser.
+    // The proxy in turn then calls http://vocab.getty.edu
+    // The getty lookup doesn't seem to have an https endpoint
+        return `https://lookup.services.cwrc.ca/getty/sparql.json?query=` + encodeURIComponent(`select ?Subject ?Term ?Parents ?Descr ?ScopeNote ?Type (coalesce(?Type1,?Type2) as ?ExtraType) {
   ?Subject luc:term "${queryString}"; a ?typ; skos:inScheme ${gettyVocab}:.
   ?typ rdfs:subClassOf gvp:Subject; rdfs:label ?Type.
   filter (?typ != gvp:Subject)
