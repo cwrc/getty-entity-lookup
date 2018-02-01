@@ -78,6 +78,7 @@ function callGetty(url, queryString, gettyVocab) {
                     nameType: gettyVocab,
                     id: uri,
                     uri,
+                    uriForDisplay: uri.replace('http://vocab.getty.edu', 'https://lookup.services.cwrc.ca/getty'),
                     name,
                     repository: 'getty',
                     originalQueryString: queryString,
