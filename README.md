@@ -113,7 +113,7 @@ and all find* methods return promises that resolve to an object like the followi
     
     uri: "http://vocab.getty.edu/ulan/500311165"
     
-    uriForDisplay: "https://vocab.getty.edu/ulan/500311165"
+    uriForDisplay: "https://getty.lookup.services.cwrc.ca/ulan/500311165"
     
 }
 ```
