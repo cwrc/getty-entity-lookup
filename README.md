@@ -68,6 +68,15 @@ to thereby allow the CWRC-Writer to make HTTPS calls to the lookup.
 We can’t make plain HTTP calls from the CWRC-Writer because the CWRC-Writer may only be 
 loaded over HTTPS, and any page loaded with HTTPS is not allowed (by many browsers) to make HTTP AJAX calls.
 
+We also proxy calls to retrieve the full page description of an entity, again to allow calls out from a page that was itself
+loaded with https.  The proxy:
+
+```https://getty.lookup.services.cwrc.ca```
+
+which in turn calls
+
+```http://vocab.getty.edu```
+
 
 ### Installation
 
