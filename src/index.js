@@ -10,7 +10,7 @@
 const gettyULAN = 'ulan';
 const gettyTGN = 'tgn';
 
-function fetchWithTimeout(url, config = {}, timeout = 8000) {
+function fetchWithTimeout(url, config = {}, timeout = 30000) {
 
         return new Promise((resolve, reject) => {
             // the reject on the promise in the timeout callback won't have any effect, *unless*
