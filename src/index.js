@@ -68,7 +68,7 @@ const callGetty = async (url, queryString, gettyVocab) => {
     //if status not ok, through an error
     if (!response.ok) throw new Error(`Something wrong with the call to Getty, possibly a problem with the network or the server. HTTP error: ${response.status}`)
     
-    response = await response.json()
+    response = await response.json();
 
     const mapResponse = response.results.bindings.map(
         ({
@@ -88,7 +88,7 @@ const callGetty = async (url, queryString, gettyVocab) => {
             }
         })
 
-        return mapResponse;
+    return mapResponse;
 }
 
 const findPerson = (queryString) => callGetty(getPersonLookupURI(queryString), queryString, gettyULAN);
