@@ -150,7 +150,6 @@ We use [babelify](https://github.com/babel/babelify) and [babel-plugin-istanbul]
 
 We use [Travis](https://travis-ci.org).
 
-
 ### Release
 
 We follow [SemVer](http://semver.org), which [Semantic Release](https://github.com/semantic-release/semantic-release) makes easy.  
