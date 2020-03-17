@@ -25,19 +25,18 @@ Although it will not work in node.js as-is, it does use the [Fetch API](https://
 
 ### SPARQL
 
-getty supports sparql, but SPARQL has limited support for full text search. The expectation with SPARQL mostly seems to be that you know exactly what you are matching on
-So, a query that exactly details the label works fine:
+getty supports sparql, but SPARQL has limited support for full text search. The expectation with SPARQL mostly seems to be that you know exactly what you are matching on. So, a query that exactly details the label works fine:
 
+```sql
 SELECT DISTINCT ?s WHERE {
-?s ?label "The Rolling Stones"@en .
-?s ?p ?o
+  ?s ?label "The Rolling Stones"@en .
+  ?s ?p ?o
 }
+```
 
-We'd like, however, to match with full text search, so we can match on partial strings, variant spellings, etc.  
-Just in the simple case above, for example, someone searching for The Rolling Stones would have to fully specify 'The Rolling Stones' and not just 'Rolling Stones'. If they left out 'The' then their query won't return the result.
+We'd like, however, to match with full text search, so we can match on partial strings, variant spellings, etc. Just in the simple case above, for example, someone searching for The Rolling Stones would have to fully specify 'The Rolling Stones' and not just 'Rolling Stones'. If they left out 'The' then their query won't return the result.
 
-There is a SPARQL CONTAINS operator that can be used within a FILTER, and that matches substrings, which is better, and
-CONTAINS seems to work with getty, e.g.
+There is a SPARQL CONTAINS operator that can be used within a FILTER, and that matches substrings, which is better, and CONTAINS seems to work with getty, e.g.
 
 ```text
 http://vocab.getty.edu/sparql.json?query=SELECT DISTINCT ?s ?label WHERE {
@@ -47,42 +46,21 @@ http://vocab.getty.edu/sparql.json?query=SELECT DISTINCT ?s ?label WHERE {
 
 but again, CONTAINS only matches substrings.
 
-There is at least one alternative to CONTAINS - REGEX - but as described
-here: [https://www.cray.com/blog/dont-use-hammer-screw-nail-alternatives-regex-sparql/](https://www.cray.com/blog/dont-use-hammer-screw-nail-alternatives-regex-sparql/) REGEX has even worse performance than CONTAINS.
+There is at least one alternative to CONTAINS - REGEX - but as described here: [https://www.cray.com/blog/dont-use-hammer-screw-nail-alternatives-regex-sparql/](https://www.cray.com/blog/dont-use-hammer-screw-nail-alternatives-regex-sparql/) REGEX has even worse performance than CONTAINS.
 
-A further alternative, which we've adopted, is the
-custom full text SPARQL search function through which Getty exposes it's underlying lucene index, as described here:
+A further alternative, which we've adopted, is the custom full text SPARQL search function through which Getty exposes it's underlying lucene index, as described here: [http://vocab.getty.edu/doc/queries/#Full_Text_Search_Query](http://vocab.getty.edu/doc/queries/#Full_Text_Search_Query) and here: [http://serials.infomotions.com/code4lib/archive/2014/201402/0596.html](http://serials.infomotions.com/code4lib/archive/2014/201402/0596.html)
 
-[http://vocab.getty.edu/doc/queries/#Full_Text_Search_Query](http://vocab.getty.edu/doc/queries/#Full_Text_Search_Query)
+The endpoint does not, however, support HTTPS. And so, we proxy our calls to the lookup through own server: `https://lookup.services.cwrc.ca/getty` to thereby allow the CWRC-Writer to make HTTPS calls to the lookup. We can’t make plain HTTP calls from the CWRC-Writer because the CWRC-Writer may only be loaded over HTTPS, and any page loaded with HTTPS is not allowed (by many browsers) to make HTTP calls.
 
-and here:
-
-[http://serials.infomotions.com/code4lib/archive/2014/201402/0596.html](http://serials.infomotions.com/code4lib/archive/2014/201402/0596.html)
-
-The endpoint does not, however, support HTTPS. And so, we proxy our calls to the lookup through own server:
-
-`https://lookup.services.cwrc.ca/getty`
-
-to thereby allow the CWRC-Writer to make HTTPS calls to the lookup.  
-We can’t make plain HTTP calls from the CWRC-Writer because the CWRC-Writer may only be
-loaded over HTTPS, and any page loaded with HTTPS is not allowed (by many browsers) to make HTTP AJAX calls.
-
-We also proxy calls to retrieve the full page description of an entity, again to allow calls out from a page that was itself
-loaded with https. The proxy:
-
-`https://getty.lookup.services.cwrc.ca`
-
-which in turn calls
-
-`http://vocab.getty.edu`
+We also proxy calls to retrieve the full page description of an entity, again to allow calls out from a page that was itself loaded with https. The proxy:`https://getty.lookup.services.cwrc.ca` which in turn calls `http://vocab.getty.edu`
 
 ## Installation
 
-npm i getty-entity-lookup -S
+`npm i getty-entity-lookup`
 
 ## Use
 
-import gettyLookup from 'getty-entity-lookup';
+`import gettyLookup from 'getty-entity-lookup';`
 
 ## API
 

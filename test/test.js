@@ -31,14 +31,14 @@ jest.useFakeTimers();
     });
     fetchMock.get(uriBuilderFn(queryStringForError), 500);
     fetchMock.get(uriBuilderFn(queryStringForMissingDescriptionInGettyResult), noDescResultsFixture)
-})
+});
 
 // from https://stackoverflow.com/a/35047888
 const doObjectsHaveSameKeys = (...objects) => {
     const allKeys = objects.reduce((keys, object) => keys.concat(Object.keys(object)), []);
     const union = new Set(allKeys);
     return objects.every(object => union.size === Object.keys(object).length);
-}
+};
 
 test('lookup builders', () => {
     expect.assertions(2);
@@ -67,7 +67,7 @@ test('lookup builders', () => {
             })).toBe(true);
             expect(singleResult.originalQueryString).toBe(queryString);
         })
-    })
+    });
 
     test(`${nameOfLookupFn} - no Description`, async () => {
         // with a result from getty with no Description
@@ -86,7 +86,7 @@ test('lookup builders', () => {
             description: ''
         })).toBe(true);
         expect(results[0].description).toBe('No description available');
-    })
+    });
 
     test(`${nameOfLookupFn} - no results`, async () => {
          // with no results
@@ -95,7 +95,7 @@ test('lookup builders', () => {
         const results = await await getty[nameOfLookupFn](queryStringWithNoResults);
         expect(Array.isArray(results)).toBe(true);
         expect(results.length).toBe(0);
-    })
+    });
 
     test(`${nameOfLookupFn} - server error`, async () => {
         // with a server error
@@ -109,7 +109,7 @@ test('lookup builders', () => {
         })
         // a falsey result should be returned
         expect(shouldBeNullResult).toBeFalsy();
-    })
+    });
 
     test(`${nameOfLookupFn} - times out`, async () => {
          // when query times out
@@ -117,6 +117,6 @@ test('lookup builders', () => {
          await getty[nameOfLookupFn](queryStringForTimeout)
              .catch( () => {
                  expect(true).toBe(true);
-             })
-    })
-})
+             });
+    });
+});

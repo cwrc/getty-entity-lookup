@@ -10,7 +10,7 @@
 const gettyULAN = 'ulan';
 const gettyTGN = 'tgn';
 
-const fetchWithTimeout = async (url, config = {}, time = 30000) => {
+const fetchWithTimeout = (url, config = {}, time = 30000) => {
 
     /*
         the reject on the promise in the timeout callback won't have any effect, *unless*
@@ -20,19 +20,18 @@ const fetchWithTimeout = async (url, config = {}, time = 30000) => {
 
     // Create a promise that rejects in <time> milliseconds
 	const timeout = new Promise((resolve, reject) => {
-		let id = setTimeout(() => {
+		const id = setTimeout(() => {
 			clearTimeout(id);
 			reject('Call to Getty timed out')
-		}, time)
-	})
+		}, time);
+	});
 
   // Returns a race between our timeout and the passed in promise
 	return Promise.race([
 		fetch(url, config),
 		timeout
-	])
-
-}
+	]);
+};
 
 // note that this method is exposed on the npm module to simplify testing,
 // i.e., to allow intercepting the HTTP call during testing, using sinon or similar.
@@ -52,7 +51,7 @@ const getEntitySourceURI = (queryString, gettyVocab) => {
         optional {?Subject foaf:focus/gvp:biographyPreferred/schema:description ?Descr}
         optional {?Subject skos:scopeNote [dct:language gvp_lang:en; rdf:value ?ScopeNote]}}
         LIMIT 5`);
-}
+};
 
 const getPersonLookupURI = (queryString) => getEntitySourceURI(queryString, gettyULAN);
 
@@ -60,17 +59,17 @@ const getPlaceLookupURI = (queryString) => getEntitySourceURI(queryString, getty
 
 const callGetty = async (url, queryString, gettyVocab) => {
 
-    let response = await fetchWithTimeout(url)
+    const response = await fetchWithTimeout(url)
         .catch((error) => {
             return error;
-        })
+        });
 
     //if status not ok, through an error
     if (!response.ok) throw new Error(`Something wrong with the call to Getty, possibly a problem with the network or the server. HTTP error: ${response.status}`)
     
-    response = await response.json();
+    const responseJson = await response.json();
 
-    const mapResponse = response.results.bindings.map(
+    const mapResponse = responseJson.results.bindings.map(
         ({
              Subject: {value: uri},
              Term: {value: name},
@@ -86,7 +85,7 @@ const callGetty = async (url, queryString, gettyVocab) => {
                 originalQueryString: queryString,
                 description
             }
-        })
+        });
 
     return mapResponse;
 }
