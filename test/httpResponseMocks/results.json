@@ -11,8 +11,7 @@
     ]
   },
   "results": {
-    "bindings": [
-      {
+    "bindings": [{
         "Subject": {
           "type": "uri",
           "value": "http://vocab.getty.edu/ulan/500206621"
