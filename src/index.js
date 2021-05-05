@@ -30,7 +30,10 @@ const callGetty = async (url, queryString, gettyVocab) => {
         nameType: gettyVocab,
         id: uri,
         uri,
-        uriForDisplay: uri.replace('http://vocab.getty.edu', 'https://getty.lookup.services.cwrc.ca'),
+        uriForDisplay: uri.replace(
+          'http://vocab.getty.edu',
+          'https://getty.lookup.services.cwrc.ca'
+        ),
         name,
         repository: 'getty',
         originalQueryString: queryString,

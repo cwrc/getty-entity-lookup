@@ -3,7 +3,9 @@ import getty from '../src/index.js';
 
 const emptyResultFixture = JSON.stringify(require('./httpResponseMocks/noResults.json'));
 const resultsFixture = JSON.stringify(require('./httpResponseMocks/results.json'));
-const noDescResultsFixture = JSON.stringify(require('./httpResponseMocks/resultsWitoutDescription.json'));
+const noDescResultsFixture = JSON.stringify(
+  require('./httpResponseMocks/resultsWitoutDescription.json')
+);
 
 const queryString = 'jones';
 const queryStringWithNoResults = 'ldfjk';
