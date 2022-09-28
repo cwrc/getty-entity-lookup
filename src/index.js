@@ -46,7 +46,7 @@ const callGetty = async (url, query, gettyVocab) => {
         nameType: gettyVocab,
         id: uri,
         uri,
-        uriForDisplay: BASE_URL,
+        uriForDisplay: uri.replace('http', 'https'),
         name,
         repository: 'getty',
         originalQueryString: query,
