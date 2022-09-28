@@ -1,3 +1,4 @@
+const BASE_URL = 'https://vocab.getty.edu';
 const GETTY_ULAN = 'ulan';
 const GETTY_TGN = 'tgn';
 
@@ -30,10 +31,7 @@ const callGetty = async (url, queryString, gettyVocab) => {
         nameType: gettyVocab,
         id: uri,
         uri,
-        uriForDisplay: uri.replace(
-          'http://vocab.getty.edu',
-          'https://getty.lookup.services.cwrc.ca'
-        ),
+        uriForDisplay: BASE_URL,
         name,
         repository: 'getty',
         originalQueryString: queryString,
