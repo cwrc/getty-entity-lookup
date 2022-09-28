@@ -54,8 +54,8 @@ The endpoint does not, however, support HTTPS. And so, we proxy our calls to the
 
 We also proxy calls to retrieve the full page description of an entity, again to allow calls out from a page that was itself loaded with https. The proxy:`https://getty.lookup.services.cwrc.ca` which in turn calls `http://vocab.getty.edu`
 
-** Update v.2.3.0
-Apparently, GETTY supports HTTPS now, so we are no longer using the proxy server.
+**Update v.2.3.0**
+GETTY supports HTTPS now, so we are no longer using the proxy server. Instead we acess `https://vocab.getty.edu` directly.
 
 ## Installation
 
