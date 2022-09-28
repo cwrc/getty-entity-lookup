@@ -2,13 +2,28 @@ const BASE_URL = 'https://vocab.getty.edu';
 const GETTY_ULAN = 'ulan';
 const GETTY_TGN = 'tgn';
 
-const findPerson = (queryString) => callGetty(getPersonLookupURI(queryString), queryString, GETTY_ULAN);
-const findPlace = (queryString) => callGetty(getPlaceLookupURI(queryString), queryString, GETTY_TGN);
+const findPerson = (query) => callGetty(getPersonLookupURI(query), query, GETTY_ULAN);
+const findPlace = (query) => callGetty(getPlaceLookupURI(query), query, GETTY_TGN);
 
-const getPersonLookupURI = (queryString) => getEntitySourceURI(queryString, GETTY_ULAN);
-const getPlaceLookupURI = (queryString) => getEntitySourceURI(queryString, GETTY_TGN);
+const getPersonLookupURI = (query) => getEntitySourceURI(query, GETTY_ULAN);
+const getPlaceLookupURI = (query) => getEntitySourceURI(query, GETTY_TGN);
 
-const callGetty = async (url, queryString, gettyVocab) => {
+/**
+ * It takes a url and a query, and returns an array of objects with the results from the Getty API
+ * @param url - the url to call
+ * @param query - the query string that the user typed in the search box
+ * @param gettyVocab - the vocabulary to search in, e.g. 'ulan'
+ * @returns An array of objects with the following properties:
+ *   nameType: gettyVocab,
+ *   id: uri,
+ *   uri,
+ *   uriForDisplay: BASE_URL,
+ *   name,
+ *   repository: 'getty',
+ *   originalQueryString: query,
+ *   description,
+ */
+const callGetty = async (url, query, gettyVocab) => {
   const response = await fetchWithTimeout(url).catch((error) => {
     return error;
   });
@@ -34,7 +49,7 @@ const callGetty = async (url, queryString, gettyVocab) => {
         uriForDisplay: BASE_URL,
         name,
         repository: 'getty',
-        originalQueryString: queryString,
+        originalQueryString: query,
         description,
       };
     }
@@ -43,22 +58,14 @@ const callGetty = async (url, queryString, gettyVocab) => {
   return mapResponse;
 };
 
-/*
-     config is passed through to fetch, so could include things like:
-     {
-         method: 'get',
-         credentials: 'same-origin'
-    }
-*/
-
+/**
+ * If the fetch takes longer than <time> milliseconds, reject the promise with the message 'Call to Getty timed out'.
+ * @param url - the url to fetch
+ * @param [config] - an object containing the configuration for the request.
+ * @param [time=30_000] - the time in milliseconds to wait before rejecting the promise
+ * @returns A function that takes in a url, config, and time.
+ */
 const fetchWithTimeout = (url, config = {}, time = 30000) => {
-  /*
-        the reject on the promise in the timeout callback won't have any effect, *unless*
-        the timeout is triggered before the fetch resolves, in which case the setTimeout rejects
-        the whole outer Promise, and the promise from the fetch is dropped entirely.
-    */
-
-  // Create a promise that rejects in <time> milliseconds
   const timeout = new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);
@@ -70,27 +77,28 @@ const fetchWithTimeout = (url, config = {}, time = 30000) => {
   return Promise.race([fetch(url, config), timeout]);
 };
 
-// note that this method is exposed on the npm module to simplify testing,
-// i.e., to allow intercepting the HTTP call during testing, using sinon or similar.
-const getEntitySourceURI = (queryString, gettyVocab) => {
-  // Calls a cwrc proxy (https://lookup.services.cwrc.ca/getty), so that we can make https calls from the browser.
-  // The proxy in turn then calls http://vocab.getty.edu
-  // The getty lookup doesn't seem to have an https endpoint
-// * Apparently, we don't need the proxy anymore
-  return (
-    'https://vocab.getty.edu/sparql.json?query=' +
+/**
+ * It takes a query string and a vocabulary ID, and returns a URL that will return a JSON object
+ * containing the results of a SPARQL query
+ * @param query - the query string
+ * @param gettyVocab - The Getty Vocabulary Program's URI.
+ * @returns The query returns the following:
+ */
+const getEntitySourceURI = (query, gettyVocab) => {
+  const encodedQuery =
     encodeURIComponent(`select ?Subject ?Term ?Parents ?Descr ?ScopeNote ?Type (coalesce(?Type1,?Type2) as ?ExtraType) {
-        ?Subject luc:term "${queryString}"; a ?typ; skos:inScheme ${gettyVocab}:.
-        ?typ rdfs:subClassOf gvp:Subject; rdfs:label ?Type.
-        filter (?typ != gvp:Subject)
-        optional {?Subject gvp:placeTypePreferred [gvp:prefLabelGVP [xl:literalForm ?Type1]]}
-        optional {?Subject gvp:agentTypePreferred [gvp:prefLabelGVP [xl:literalForm ?Type2]]}
-        optional {?Subject gvp:prefLabelGVP [xl:literalForm ?Term]}
-        optional {?Subject gvp:parentStringAbbrev ?Parents}
-        optional {?Subject foaf:focus/gvp:biographyPreferred/schema:description ?Descr}
-        optional {?Subject skos:scopeNote [dct:language gvp_lang:en; rdf:value ?ScopeNote]}}
-        LIMIT 5`)
-  );
+    ?Subject luc:term "${query}"; a ?typ; skos:inScheme ${gettyVocab}:.
+    ?typ rdfs:subClassOf gvp:Subject; rdfs:label ?Type.
+    filter (?typ != gvp:Subject)
+    optional {?Subject gvp:placeTypePreferred [gvp:prefLabelGVP [xl:literalForm ?Type1]]}
+    optional {?Subject gvp:agentTypePreferred [gvp:prefLabelGVP [xl:literalForm ?Type2]]}
+    optional {?Subject gvp:prefLabelGVP [xl:literalForm ?Term]}
+    optional {?Subject gvp:parentStringAbbrev ?Parents}
+    optional {?Subject foaf:focus/gvp:biographyPreferred/schema:description ?Descr}
+    optional {?Subject skos:scopeNote [dct:language gvp_lang:en; rdf:value ?ScopeNote]}}
+    LIMIT 5`);
+
+  return `${BASE_URL}/sparql.json?query=${encodedQuery}`;
 };
 
 export default {
